@@ -61,8 +61,7 @@ func (r *DryRunRestore) BrokenImageStreamTag(is imageapiv1.ImageStream, event im
 
 // ImageStreamTag prints information about imagestream tag which could be restored
 func (r *DryRunRestore) ImageStreamTag(imageStream imagestream.ImageStream, image *imageapiv1.Image, tagName string) error {
-	fmt.Printf("Would add image %q to imagestream %q with tag %q\n", image.Name, imageStream.Reference(), tagName)
-	return nil
+	return imageStream.DryRunMessage(image, tagName)
 }
 
 type StorageRestore struct {

@@ -1,0 +1,2 @@
+
+oc get is --all-namespaces -o=jsonpath='{"{"}{range .items[*]}"{.metadata.namespace}/{.metadata.name}":"{.status.tags[0].tag}",{"\n"}{end}{"}"}' > alltags.json

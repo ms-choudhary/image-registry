@@ -15,12 +15,15 @@ import (
 	"github.com/openshift/image-registry/pkg/dockerregistry/server/client"
 	registryconfig "github.com/openshift/image-registry/pkg/dockerregistry/server/configuration"
 	"github.com/openshift/image-registry/pkg/dockerregistry/server/prune"
+	"github.com/openshift/image-registry/pkg/imagestream"
 	"github.com/openshift/image-registry/pkg/origin-common/clientcmd"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func ExecuteRestore(configFile io.Reader, mode, namespace string) {
+	imagestream.LoadTags()
+
 	if len(namespace) == 0 {
 		namespace = metav1.NamespaceAll
 	}
@@ -89,10 +92,11 @@ func ExecuteRestore(configFile io.Reader, mode, namespace string) {
 		}
 	}
 
-	switch mode {
-	case "check", "check-database", "recover":
-		if err := fsck.Database(namespace); err != nil {
-			log.Fatalf("Database failed: %s", err)
-		}
-	}
+	// skip database check for now
+	//switch mode {
+	//case "check", "check-database", "recover":
+	//if err := fsck.Database(namespace); err != nil {
+	//log.Fatalf("Database failed: %s", err)
+	//}
+	//}
 }

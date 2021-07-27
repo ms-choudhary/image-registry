@@ -69,9 +69,9 @@ func main() {
 
 	// TODO convert to flags instead of a config file?
 	configurationPath := ""
-	if flag.NArg() > 0 {
-		configurationPath = flag.Arg(0)
-	}
+	//if flag.NArg() > 0 {
+	//configurationPath = flag.Arg(0)
+	//}
 	if configurationPath == "" {
 		configurationPath = os.Getenv("REGISTRY_CONFIGURATION_PATH")
 	}

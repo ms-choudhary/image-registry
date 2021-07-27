@@ -60,6 +60,7 @@ type ImageStream interface {
 
 	TagIsInsecure(ctx context.Context, tag string, dgst digest.Digest) (bool, rerrors.Error)
 	Tags(ctx context.Context) (map[string]digest.Digest, rerrors.Error)
+	DryRunMessage(image *imageapiv1.Image, tagName string) error
 }
 
 type imageStream struct {
@@ -309,7 +310,24 @@ func (is *imageStream) Tags(ctx context.Context) (map[string]digest.Digest, rerr
 	return m, nil
 }
 
+func (is *imageStream) DryRunMessage(image *imageapiv1.Image, tagName string) error {
+	prevtag := PrevTag(is.namespace + "/" + is.name)
+
+	if prevtag != "" {
+		tagName = prevtag
+	}
+
+	fmt.Printf("Would add image %q to imagestream %q with tag %q\n", image.Name, is.Reference(), tagName)
+	return nil
+}
+
 func (is *imageStream) CreateImageStreamMapping(ctx context.Context, userClient client.Interface, tag string, image *imageapiv1.Image) rerrors.Error {
+	prevtag := PrevTag(is.namespace + "/" + is.name)
+
+	if prevtag != "" {
+		tag = prevtag
+	}
+
 	ism := imageapiv1.ImageStreamMapping{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: is.namespace,
